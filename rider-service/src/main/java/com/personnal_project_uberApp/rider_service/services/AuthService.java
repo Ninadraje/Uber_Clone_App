@@ -9,6 +9,6 @@ public interface AuthService {
 
     String login(LoginRequestDto loginRequestDto);
 
-    RiderDto signup(SignupRequestDto signupDto);
+    RiderDto signUp(SignupRequestDto signupDto);
 
 }

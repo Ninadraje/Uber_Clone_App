@@ -10,6 +10,6 @@ public interface AuthService {
 
     String login(LoginRequestDto loginRequestDto);
 
-    DriverDto signup(SignupRequestDto signupDto);
+    DriverDto signUp(SignupRequestDto signupDto);
 
 }

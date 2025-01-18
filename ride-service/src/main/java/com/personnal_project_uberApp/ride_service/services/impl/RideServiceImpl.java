@@ -1,5 +1,6 @@
 package com.personnal_project_uberApp.ride_service.services.impl;
 
+import com.personnal_project_uberApp.ride_service.dto.DriverDto;
 import com.personnal_project_uberApp.ride_service.dto.RideDto;
 import com.personnal_project_uberApp.ride_service.dto.RideRequestDto;
 import com.personnal_project_uberApp.ride_service.entities.RideRequest;
@@ -7,39 +8,46 @@ import com.personnal_project_uberApp.ride_service.entities.enums.RideRequestStat
 import com.personnal_project_uberApp.ride_service.entities.enums.RideStatus;
 import com.personnal_project_uberApp.ride_service.repository.RideRequestRepository;
 import com.personnal_project_uberApp.ride_service.services.RideService;
+import com.personnal_project_uberApp.ride_service.strategies.DriverMatchingStrategy;
 import com.personnal_project_uberApp.ride_service.strategies.RideFareCalculationStrategy;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class RideServiceImpl implements RideService {
 
     private final ModelMapper modelMapper;
     private final RideFareCalculationStrategy rideFareCalculationStrategy;
     private final RideRequestRepository rideRequestRepository;
+    private final DriverMatchingStrategy driverMatchingStrategy;
+
+    public RideServiceImpl(ModelMapper modelMapper, RideFareCalculationStrategy rideFareCalculationStrategy, RideRequestRepository rideRequestRepository, DriverMatchingStrategy driverMatchingStrategy) {
+        this.modelMapper = modelMapper;
+        this.rideFareCalculationStrategy = rideFareCalculationStrategy;
+        this.rideRequestRepository = rideRequestRepository;
+        this.driverMatchingStrategy = driverMatchingStrategy;
+    }
 
 
     @Override
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
 
-        RideRequest rideRequest= modelMapper.map(rideRequestDto,RideRequest.class);
+        RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
 
         //Calculating Ride fare
-        double fare=rideFareCalculationStrategy.calculateFare(rideRequest);
+        double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
         rideRequest.setFare(fare);
 
-        RideRequest savedRideRequest= rideRequestRepository.save(rideRequest);
+        RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
         //Match with drivers
+        List<DriverDto> driverDtoList = driverMatchingStrategy.findMatchingDrivers(savedRideRequest);
 
 
-
-        return modelMapper.map(savedRideRequest,RideRequestDto.class);
+        return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
 
     @Override
