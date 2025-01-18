@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface RideService {
 
+    //Ride request from the rider
+    RideRequestDto requestRide(RideRequestDto rideRequestDto);
 
     RideDto getRideById(Long rideId);
 
@@ -19,7 +21,7 @@ public interface RideService {
 
     RideDto updateRideStatus(Long rideId, RideStatus rideStatus);
 
-    List<RideDto> getAllRidesOfRider(Long riderId, PageRequest pageRequest);
+    List<RideDto> getAllRidesOfRider(Long riderId);
 
-    List<RideDto> getAllRidesOfDriver(Long driverId, PageRequest pageRequest);
+    List<RideDto> getAllRidesOfDriver(Long driverId);
 }
