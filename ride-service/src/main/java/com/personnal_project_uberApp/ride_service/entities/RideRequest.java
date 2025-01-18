@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
+
 
 import java.time.LocalDateTime;
 
@@ -33,6 +34,8 @@ public class RideRequest {
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    private Double fare;
 
     @Enumerated(EnumType.STRING)
     private RideRequestStatus rideRequestStatus;
