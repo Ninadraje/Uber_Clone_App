@@ -3,9 +3,15 @@ package com.personnal_project_uberApp.ride_service.dto;
 
 import com.personnal_project_uberApp.ride_service.entities.enums.PaymentMethod;
 import com.personnal_project_uberApp.ride_service.entities.enums.RideRequestStatus;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@Data
 public class RideRequestDto {
 
     private Long id;
@@ -33,62 +39,6 @@ public class RideRequestDto {
     }
 
     public RideRequestDto() {
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public PointDto getPickupLocation() {
-        return this.pickupLocation;
-    }
-
-    public PointDto getDropOffLocation() {
-        return this.dropOffLocation;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return this.paymentMethod;
-    }
-
-    public LocalDateTime getRequestedTime() {
-        return this.requestedTime;
-    }
-
-    public Long getRiderId() {
-        return this.riderId;
-    }
-
-    public RideRequestStatus getRideRequestStatus() {
-        return this.rideRequestStatus;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setPickupLocation(PointDto pickupLocation) {
-        this.pickupLocation = pickupLocation;
-    }
-
-    public void setDropOffLocation(PointDto dropOffLocation) {
-        this.dropOffLocation = dropOffLocation;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public void setRequestedTime(LocalDateTime requestedTime) {
-        this.requestedTime = requestedTime;
-    }
-
-    public void setRiderId(Long riderId) {
-        this.riderId = riderId;
-    }
-
-    public void setRideRequestStatus(RideRequestStatus rideRequestStatus) {
-        this.rideRequestStatus = rideRequestStatus;
     }
 
     public boolean equals(final Object o) {

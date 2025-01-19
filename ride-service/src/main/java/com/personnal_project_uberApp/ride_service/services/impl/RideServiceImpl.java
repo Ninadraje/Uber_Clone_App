@@ -10,12 +10,14 @@ import com.personnal_project_uberApp.ride_service.repository.RideRequestReposito
 import com.personnal_project_uberApp.ride_service.services.RideService;
 import com.personnal_project_uberApp.ride_service.strategies.DriverMatchingStrategy;
 import com.personnal_project_uberApp.ride_service.strategies.RideFareCalculationStrategy;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RideServiceImpl implements RideService {
 
     private final ModelMapper modelMapper;
@@ -23,12 +25,6 @@ public class RideServiceImpl implements RideService {
     private final RideRequestRepository rideRequestRepository;
     private final DriverMatchingStrategy driverMatchingStrategy;
 
-    public RideServiceImpl(ModelMapper modelMapper, RideFareCalculationStrategy rideFareCalculationStrategy, RideRequestRepository rideRequestRepository, DriverMatchingStrategy driverMatchingStrategy) {
-        this.modelMapper = modelMapper;
-        this.rideFareCalculationStrategy = rideFareCalculationStrategy;
-        this.rideRequestRepository = rideRequestRepository;
-        this.driverMatchingStrategy = driverMatchingStrategy;
-    }
 
 
     @Override
@@ -44,8 +40,7 @@ public class RideServiceImpl implements RideService {
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
         //Match with drivers
-        List<DriverDto> driverDtoList = driverMatchingStrategy.findMatchingDrivers(savedRideRequest);
-
+        List<Long> driverIdList = driverMatchingStrategy.findMatchingDrivers(rideRequestDto);
 
         return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
