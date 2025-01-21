@@ -10,9 +10,11 @@ import com.personnal_project_uberApp.ride_service.repository.RideRequestReposito
 import com.personnal_project_uberApp.ride_service.services.RideService;
 import com.personnal_project_uberApp.ride_service.strategies.DriverMatchingStrategy;
 import com.personnal_project_uberApp.ride_service.strategies.RideFareCalculationStrategy;
+import com.personnal_project_uberApp.ride_service.strategies.RideStrategyManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,26 +23,30 @@ import java.util.List;
 public class RideServiceImpl implements RideService {
 
     private final ModelMapper modelMapper;
-    private final RideFareCalculationStrategy rideFareCalculationStrategy;
+    private final RideStrategyManager rideStrategyManager;
     private final RideRequestRepository rideRequestRepository;
-    private final DriverMatchingStrategy driverMatchingStrategy;
+
 
 
 
     @Override
+    @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
 
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
 
         //Calculating Ride fare
+        RideFareCalculationStrategy rideFareCalculationStrategy = rideStrategyManager.rideFareCalculationStrategy(rideRequest.getPickupLocation());
         double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
         rideRequest.setFare(fare);
 
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
         //Match with drivers
+        DriverMatchingStrategy driverMatchingStrategy= rideStrategyManager.driverMatchingStrategy(3.0);
         List<Long> driverIdList = driverMatchingStrategy.findMatchingDrivers(rideRequestDto);
+        //TODO send request to all the drivers through kafka
 
         return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }

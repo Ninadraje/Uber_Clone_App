@@ -19,7 +19,7 @@ public class DriverController {
 
     private final DriverService driverService;
 
-    @GetMapping("/get-matching-ten-nearest-drivers")
+    @PostMapping("/get-matching-ten-nearest-drivers")
     List<Long> getTenNearestDrivers(@RequestBody PointDto pickUpLocation){
         return driverService.findTenNearestDrivers(pickUpLocation);
     }

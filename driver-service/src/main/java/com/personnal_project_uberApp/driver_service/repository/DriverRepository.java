@@ -13,7 +13,8 @@ import java.util.Optional;
 public interface DriverRepository extends JpaRepository<Driver,Long> {
 
 
-    @Query(value = "SELECT d.*,ST_Distance(d.current_location, :pickUpLocation,10000) AS distance "+
+
+    @Query(value = "SELECT d.*,ST_Distance(d.current_location,ST_Point(1926.064758 ,40.73060999999951,4326)) AS distance "+
             "FROM user_driver d "+
             "where available = true AND ST_DWithin(d.current_location, :pickUpLocation,10000) "+
             "ORDER BY distance "+
