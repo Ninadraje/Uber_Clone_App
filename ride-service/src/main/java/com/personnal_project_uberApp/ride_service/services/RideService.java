@@ -2,6 +2,8 @@ package com.personnal_project_uberApp.ride_service.services;
 
 import com.personnal_project_uberApp.ride_service.dto.RideDto;
 import com.personnal_project_uberApp.ride_service.dto.RideRequestDto;
+import com.personnal_project_uberApp.ride_service.dto.StartRideDto;
+import com.personnal_project_uberApp.ride_service.entities.Ride;
 import com.personnal_project_uberApp.ride_service.entities.enums.RideStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +17,13 @@ public interface RideService {
 
     RideDto getRideById(Long rideId);
 
-    void matchWithDrivers(RideRequestDto rideRequestDto);
+    RideDto acceptRideRequest(Long rideRequestId);
 
-    RideDto createNewRide(RideRequestDto rideRequestDto, Long driverId);
-
-    RideDto updateRideStatus(Long rideId, RideStatus rideStatus);
+    Ride updateRideStatus(Ride ride, RideStatus rideStatus);
 
     List<RideDto> getAllRidesOfRider(Long riderId);
 
     List<RideDto> getAllRidesOfDriver(Long driverId);
+
+    RideDto startRide(Long rideId, StartRideDto startRideDto);
 }
