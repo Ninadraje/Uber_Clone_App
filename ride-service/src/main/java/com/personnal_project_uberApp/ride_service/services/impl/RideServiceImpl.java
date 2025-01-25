@@ -140,6 +140,8 @@ public class RideServiceImpl implements RideService {
             throw new RuntimeException("Cannot End this ride as its in "+ride.getRideStatus()+" status");
         }
 
+        //update the end time
+        ride.setEndedAt(LocalDateTime.now());
         Ride savedRide=updateRideStatus(ride,RideStatus.ENDED);
         //TODO after confirmation of the ride , update the availability of the driver
         return modelMapper.map(savedRide,RideDto.class);
@@ -149,7 +151,7 @@ public class RideServiceImpl implements RideService {
     public RideDto cancelRideByRider(Long rideId) {
 
         //TODO -> get rider id by UserContext holder , right now hardcoding the values
-        Long riderId=2L;
+        Long riderId=1L;
 
         //check if ride exists
         Ride ride= rideRepository.findById(rideId).orElseThrow(
@@ -173,7 +175,7 @@ public class RideServiceImpl implements RideService {
     public RideDto cancelRideByDriver(Long rideId) {
 
         //TODO -> get driver id by UserContext holder , right now hardcoding the values
-        Long driverId=2L;
+        Long driverId=22L;
 
         //check if ride exists
         Ride ride= rideRepository.findById(rideId).orElseThrow(
@@ -212,7 +214,7 @@ public class RideServiceImpl implements RideService {
     public List<RideDto> getAllRidesOfRider() {
 
         //TODO -> get rider id by UserContext holder , right now hardcoding the values
-        Long riderId=2L;
+        Long riderId=1L;
 
         Optional<List<Ride>> rides= rideRepository.findAllByRiderId(riderId);
 
@@ -227,7 +229,7 @@ public class RideServiceImpl implements RideService {
     public List<RideDto> getAllRidesOfDriver() {
 
         //TODO -> get rider id by UserContext holder , right now hardcoding the values
-        Long driverId=2L;
+        Long driverId=22L;
 
         Optional<List<Ride>> rides= rideRepository.findAllByDriverId(driverId);
 

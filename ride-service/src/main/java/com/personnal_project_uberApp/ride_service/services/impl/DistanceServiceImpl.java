@@ -15,8 +15,8 @@ public class DistanceServiceImpl implements DistanceService {
     @Override
     public double calculateDistance(Point src, Point dest) {
         //calculate third party api OSRM to calculate distance
-
-        String uri= src.getX()+","+ src.getY()+";"+ dest.getX()+","+ dest.getY();
+        //changing X and Y because OSRM takes longitude and then latitude as parameters
+        String uri= src.getY()+","+ src.getX()+";"+ dest.getY()+","+ dest.getX();
 
         try {
             OSRMResponseDto osrmResponseDto = RestClient.builder()

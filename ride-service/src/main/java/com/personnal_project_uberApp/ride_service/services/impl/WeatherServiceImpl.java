@@ -12,10 +12,8 @@ import org.springframework.web.client.RestClient;
 public class WeatherServiceImpl implements WeatherService {
 
     private static final String WEATHER_API_URI="http://api.weatherapi.com/v1/current.json";
-//key=4d278407688a4f5db00152309252101&q=48.8567,2.3508&aqi=no
 
     private static final String API_KEY="4d278407688a4f5db00152309252101";
-
 
     @Override
     public String weatherCondition(Point src) {
@@ -34,7 +32,7 @@ public class WeatherServiceImpl implements WeatherService {
             assert weatherResponseDto != null;
             return weatherResponseDto.getCurrent().getCondition().getText();
         }catch (Exception e){
-            throw new RuntimeException("Error gettin data from OSRM"+ e.getMessage());
+            throw new RuntimeException("Error gettin data from Weether Response API"+ e.getMessage());
         }
     }
 }

@@ -48,12 +48,12 @@ public class RideController {
         return  ResponseEntity.ok(rideService.cancelRideByDriver(rideId));
     }
 
-    @PostMapping("/getAllRidesOfRider")
+    @GetMapping("/getAllRidesOfRider")
     public ResponseEntity<List<RideDto>> getAllRidesOfRider(){
         return  ResponseEntity.ok(rideService.getAllRidesOfRider());
     }
 
-    @PostMapping("/getAllRidesOfDriver")
+    @GetMapping("/getAllRidesOfDriver")
     public ResponseEntity<List<RideDto>> getAllRidesOfDriver(){
         return  ResponseEntity.ok(rideService.getAllRidesOfDriver());
     }
