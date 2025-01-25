@@ -5,19 +5,18 @@ import com.personnal_project_uberApp.ride_service.dto.RideDto;
 import com.personnal_project_uberApp.ride_service.dto.RideRequestDto;
 import com.personnal_project_uberApp.ride_service.dto.StartRideDto;
 import com.personnal_project_uberApp.ride_service.services.RideService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 public class RideController {
 
 
     private final RideService rideService;
-
-    public RideController(RideService rideService) {
-        this.rideService = rideService;
-    }
-
 
     @PostMapping("/requestRide")
     public ResponseEntity<RideRequestDto> requestRide(@RequestBody RideRequestDto rideRequestDto) {
@@ -34,5 +33,29 @@ public class RideController {
         return ResponseEntity.ok(rideService.startRide(rideId,startRideDto));
     }
 
+    @PostMapping("/endRide/{rideId}")
+    public ResponseEntity<RideDto> endRide(@PathVariable Long rideId){
+        return  ResponseEntity.ok(rideService.endRide(rideId));
+    }
+
+    @PostMapping("/cancelRideByRider/{rideId}")
+    public ResponseEntity<RideDto> cancelRideByRider(@PathVariable Long rideId){
+        return  ResponseEntity.ok(rideService.cancelRideByRider(rideId));
+    }
+
+    @PostMapping("/cancelRideByDriver/{rideId}")
+    public ResponseEntity<RideDto> cancelRideByDriver(@PathVariable Long rideId){
+        return  ResponseEntity.ok(rideService.cancelRideByDriver(rideId));
+    }
+
+    @PostMapping("/getAllRidesOfRider")
+    public ResponseEntity<List<RideDto>> getAllRidesOfRider(){
+        return  ResponseEntity.ok(rideService.getAllRidesOfRider());
+    }
+
+    @PostMapping("/getAllRidesOfDriver")
+    public ResponseEntity<List<RideDto>> getAllRidesOfDriver(){
+        return  ResponseEntity.ok(rideService.getAllRidesOfDriver());
+    }
 
 }

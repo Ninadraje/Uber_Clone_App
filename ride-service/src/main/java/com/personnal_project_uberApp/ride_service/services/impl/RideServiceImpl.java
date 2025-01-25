@@ -23,7 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +41,6 @@ public class RideServiceImpl implements RideService {
     @Override
     @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
-
 
         //TODO get rider ID from the USER-CONTEXT holder and set it in the ride request , currently we are sending it in the request
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
@@ -127,8 +129,77 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    public RideDto endRide(Long rideId) {
+
+        //check if ride exists
+        Ride ride= rideRepository.findById(rideId).orElseThrow(
+                ()-> new ResourceNotFoundException("No ride with these specification to cancel")
+        );
+
+        if(!ride.getRideStatus().equals(RideStatus.ONGOING)){
+            throw new RuntimeException("Cannot End this ride as its in "+ride.getRideStatus()+" status");
+        }
+
+        Ride savedRide=updateRideStatus(ride,RideStatus.ENDED);
+        //TODO after confirmation of the ride , update the availability of the driver
+        return modelMapper.map(savedRide,RideDto.class);
+    }
+
+    @Override
+    public RideDto cancelRideByRider(Long rideId) {
+
+        //TODO -> get rider id by UserContext holder , right now hardcoding the values
+        Long riderId=2L;
+
+        //check if ride exists
+        Ride ride= rideRepository.findById(rideId).orElseThrow(
+                ()-> new ResourceNotFoundException("No ride with these specification to cancel")
+        );
+
+        if(!ride.getRiderId().equals(riderId)){
+            throw new RuntimeException("Rider cannot cancel this ride, due to id mismatch");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)){
+            throw new RuntimeException("Cannot Cancel this ride as its in "+ride.getRideStatus()+" status");
+        }
+
+        Ride savedRide=updateRideStatus(ride,RideStatus.CANCELLED);
+        //TODO after confirmation of the ride , update the availability of the driver
+        return modelMapper.map(savedRide,RideDto.class);
+    }
+
+    @Override
+    public RideDto cancelRideByDriver(Long rideId) {
+
+        //TODO -> get driver id by UserContext holder , right now hardcoding the values
+        Long driverId=2L;
+
+        //check if ride exists
+        Ride ride= rideRepository.findById(rideId).orElseThrow(
+                ()-> new ResourceNotFoundException("No ride with these specification to cancel")
+        );
+
+        if(!ride.getDriverId().equals(driverId)){
+            throw new RuntimeException("Rider cannot cancel this ride, due to id mismatch");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)){
+            throw new RuntimeException("Cannot Cancel this ride as its in "+ride.getRideStatus()+" status");
+        }
+
+        Ride savedRide=updateRideStatus(ride,RideStatus.CANCELLED);
+        //TODO after confirmation of the ride , update the availability of the driver
+        return modelMapper.map(savedRide,RideDto.class);
+    }
+
+    @Override
     public RideDto getRideById(Long rideId) {
-        return null;
+        //check if ride exists
+        Ride ride= rideRepository.findById(rideId).orElseThrow(
+                ()-> new ResourceNotFoundException("No ride with these specification to cancel")
+        );
+        return modelMapper.map(ride, RideDto.class);
     }
 
     @Override
@@ -138,13 +209,34 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public List<RideDto> getAllRidesOfRider(Long riderId) {
-        return List.of();
+    public List<RideDto> getAllRidesOfRider() {
+
+        //TODO -> get rider id by UserContext holder , right now hardcoding the values
+        Long riderId=2L;
+
+        Optional<List<Ride>> rides= rideRepository.findAllByRiderId(riderId);
+
+
+        return rides.orElse(Collections.emptyList()) // Handle empty optional
+                .stream()
+                .map(ride -> modelMapper.map(ride, RideDto.class)) // Map each Ride to RideDto
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<RideDto> getAllRidesOfDriver(Long driverId) {
-        return List.of();
+    public List<RideDto> getAllRidesOfDriver() {
+
+        //TODO -> get rider id by UserContext holder , right now hardcoding the values
+        Long driverId=2L;
+
+        Optional<List<Ride>> rides= rideRepository.findAllByDriverId(driverId);
+
+
+        return rides.orElse(Collections.emptyList()) // Handle empty optional
+                .stream()
+                .map(ride -> modelMapper.map(ride, RideDto.class)) // Map each Ride to RideDto
+                .collect(Collectors.toList());
+
     }
 
 
